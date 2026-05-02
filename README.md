@@ -1,6 +1,6 @@
 # tiny-autograd
 
-A ~600-line autograd engine with broadcasting support, trained to **97.5% on MNIST**. Built from scratch to understand what PyTorch does under the hood — no framework, no magic, just NumPy and the chain rule.
+A ~600-line autograd engine with broadcasting support, trained to **97.5% on MNIST**. Built from scratch to understand what PyTorch does under the hood no framework, no magic, just NumPy and the chain rule.
 
 ```
 epoch 1/5  loss=0.3257  train_acc=96.58%  test_acc=95.47%  (1.2s)
@@ -27,7 +27,7 @@ epoch 5/5  loss=0.0577  train_acc=98.98%  test_acc=97.50%  (1.0s)
 
 ## Comparison with PyTorch
 
-Honest framing — this is a learning tool, not a competitor:
+This is a learning tool, not a competitor:
 
 | | **tiny-autograd** | **PyTorch** |
 |---|---|---|
