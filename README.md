@@ -18,12 +18,12 @@ epoch 5/5  loss=0.0577  train_acc=98.98%  test_acc=97.50%  (1.0s)
 
 ## What This Demonstrates
 
-- **Reverse-mode automatic differentiation** from first principles — building a computational graph in the forward pass, walking it backward in topological order.
+- **Reverse-mode automatic differentiation** from first principles building a computational graph in the forward pass, walking it backward in topological order.
 - **Broadcasting-aware gradients.** NumPy happily broadcasts `(10,)` against `(32, 10)` in the forward pass. The backward pass has to un-broadcast — summing gradients along axes that were implicitly expanded. Every binary op routes through `_unbroadcast` to get this right.
 - **Fused softmax-cross-entropy** for numerical stability. Autograd-ing through `log(softmax(x))` naively lets `exp()` blow up; the fused version uses the log-sum-exp trick and computes the clean `(softmax - one_hot) / N` gradient directly.
 - **A working Adam optimizer** with bias-corrected first and second moments, implemented from the paper.
-- **Kaiming initialization** — the difference between a network that trains and one that stalls at chance. The `Linear` layer samples weights from `N(0, sqrt(2/fan_in))` to keep ReLU pre-activations at unit variance.
-- **Gradient correctness testing** — every op has a finite-difference check (`test_tensor.py`), comparing analytic and numerical gradients. Float32 tolerance is intentionally loose (3e-3); the goal is catching formula bugs and broadcasting bugs, not chasing ULP precision.
+- **Kaiming initialization** the difference between a network that trains and one that stalls at chance. The `Linear` layer samples weights from `N(0, sqrt(2/fan_in))` to keep ReLU pre-activations at unit variance.
+- **Gradient correctness testing** every op has a finite-difference check (`test_tensor.py`), comparing analytic and numerical gradients. Float32 tolerance is intentionally loose (3e-3); the goal is catching formula bugs and broadcasting bugs, not chasing ULP precision.
 
 ## Comparison with PyTorch
 
