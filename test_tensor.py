@@ -36,6 +36,8 @@ def _numerical_grad(f, x: np.ndarray) -> np.ndarray:
 
 def _check(name, build_fn, *input_shapes):
     """Generic gradient check. `build_fn(*tensors) -> scalar Tensor`."""
+    global _TOTAL, _FAILURES
+    _TOTAL += 1
     inputs_np = [RNG.standard_normal(s).astype(np.float32) for s in input_shapes]
 
     # Analytic gradient.
@@ -58,11 +60,20 @@ def _check(name, build_fn, *input_shapes):
         print(f"  [{status}] {name}  input{i}: max|ana-num|={diff:.2e}  rel={rel:.2e}")
         if not ok:
             print(f"    ana[:5]={ana[i].flat[:5]}\n    num[:5]={num.flat[:5]}")
+            _FAILURES += 1
             return False
     return True
 
 
+_FAILURES = 0
+_TOTAL = 0
+
+
 def run():
+    global _FAILURES, _TOTAL
+    _FAILURES = 0
+    _TOTAL = 0
+
     # Random projection turns vector/matrix output into a scalar so we have a
     # well-defined gradient to check. Different shapes per test as needed.
     def proj(t, w): return (t * Tensor(w)).sum()
@@ -127,8 +138,11 @@ def run():
     def xent_fn(logits): return logits.softmax_cross_entropy(targets)
     _check("softmax_cross_entropy (4,5) labels", xent_fn, (4, 5))
 
-    print("\nDone. If every line says OK, the engine is correct.")
+    passed = _TOTAL - _FAILURES
+    print(f"\n{passed}/{_TOTAL} checks passed.")
+    return _FAILURES == 0
 
 
 if __name__ == "__main__":
-    run()
+    import sys
+    sys.exit(0 if run() else 1)
